@@ -1,7 +1,9 @@
 import http
 from time import time
 
-from vendor.service.videodecoder import TranscriptionSpeech, compiling_file
+import whisper
+
+from service.reader import FileReader
 from vendor.service.videodecoder import DataProcessor
 
 # class MyHandler(http.server.SimpleHTTPRequestHandler):
@@ -44,10 +46,19 @@ def run():
 
     dp = DataProcessor('input', 'output')
     dp.RenderCsvFile()
-
+    # fr = FileReader()
+    # fr.GetTitleAndDescription('1')
+    # results = fr.GetFileNames()
+    # count = 0
+    # for item in results:
+    #     count += 1
+    #     print(f'{count} id: {item}, state: {results[item]}')
+    # result = dp.DecodeVideo('4a4dc53857b44464613052a331877a07')
+    # print(result)
     return True
 
 if __name__ == '__main__':
+    # print(whisper.available_models())
     run()
 
     # # Запускаем HTTP сервер в отдельном потоке

@@ -1,9 +1,9 @@
 import os
 
-from .keywordsextractor import KeywordsExtractor
-from .mediaspliter import MediaSplitter
+from .KeywordsExtractor import KeywordsExtractor
+from .MediaSplitter import MediaSplitter
 from .normalizator import normalize_name
-from .speech import TranscriptionSpeech
+from .TranscriptionSpeech import TranscriptionSpeech
 
 import pandas as pd
 
@@ -22,6 +22,7 @@ class DataProcessor:
         """
         Обработка видеофайлов из директории и сохранение результатов в CSV.
 
+        :param extension: расширения файла который открывается (мп4)
         :param name: Название выходного CSV файла (без расширения)
         """
 
@@ -64,6 +65,45 @@ class DataProcessor:
 
                 # Сохраняем обновленный DataFrame обратно в CSV
                 df.to_csv(f'{self.output_dir}/{name}.csv', index=False, encoding='utf-8')
+
+
+    def DecodeVideo(self, filename: str) -> str | None:
+        if filename is None:
+            return None
+
+        # Читаем существующий CSV-файл в DataFrame
+        df = pd.read_csv(f'{self.output_dir}/result.csv')
+        # Извлекаем ИД (например, из названия файла)
+        video_id = normalize_name(filename)  # ИД видео — название файла без расширения
+
+        # Проверка на существование обработки
+        if not df.loc[df['video_id'] == video_id, 'popular_words'].isnull().any():
+            popular_words = df.loc[df['video_id'] == video_id, 'popular_words'].values[0]
+            print(f"Видео {video_id} уже обработано, {popular_words}")
+            return popular_words
+
+        splitter = MediaSplitter(video_id)
+        video = splitter.open_file(self.input_dir)
+
+        if not (splitter.split_files(video, self.output_dir)):
+            return None
+
+        transSpeech = TranscriptionSpeech()
+        extractor = KeywordsExtractor()
+
+        # Расшифровка видео
+        transSpeech.stt(video_id)
+
+        # Открываем файл с расшифровкой
+        with open(f'./{self.output_dir}/text/{video_id}.txt', 'r', encoding='utf-8') as file:
+            content = file.read()  # Читаем содержимое файла
+        words = extractor.get_most_popular_words(content)
+
+        # Находим строку с нужным video_id и обновляем поле popular_words
+        df.loc[df['video_id'] == video_id, 'popular_words'] = words
+
+        # Сохраняем обновленный DataFrame обратно в CSV
+        df.to_csv(f'{self.output_dir}/result.csv', index=False, encoding='utf-8')
 
 
 # import os

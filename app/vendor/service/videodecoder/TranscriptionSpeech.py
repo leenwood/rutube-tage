@@ -8,8 +8,7 @@ import whisper
 class TranscriptionSpeech:
 
     def __init__(self):
-        self.model = whisper.load_model("base")
-        pass
+        self.model = whisper.load_model("tiny")
 
     def stt(self, filename: str):
         filename = normalize_name(filename)
@@ -18,7 +17,3 @@ class TranscriptionSpeech:
         # TODO вынести путь до файлов в конфиг
         with open("./output/text/" + filename.lower() + ".txt", "w", encoding="utf-8") as file:
             file.write(audio_text["text"])
-
-    def func2(self, audio: AudioClip) -> str:
-        text = self.model.transcribe(audio=audio, language="ru")
-        return text["text"]

@@ -1,4 +1,3 @@
-from .mediaspliter import MediaSplitter
-from .speech import TranscriptionSpeech
-from .compilator import compiling_file
-from .dataprocessor import DataProcessor
+from .MediaSplitter import MediaSplitter
+from .TranscriptionSpeech import TranscriptionSpeech
+from .DataProcessor import DataProcessor
