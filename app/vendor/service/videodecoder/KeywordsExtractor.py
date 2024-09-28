@@ -24,12 +24,12 @@ class KeywordsExtractor:
                 russian_stopwords = pickle.load(f)
         else:
             # Загрузка стоп-слов
-            nltk.download("stopwords")
-            from nltk.corpus import stopwords
+
             # Иначе загружаем из интернета и сохраняем в файл
+            from nltk.corpus import stopwords
             russian_stopwords = set(stopwords.words('russian'))
             # Добавляем дополнительные стоп-слова
-            additional_stopwords = {'всё', 'это', 'ещё', 'поэтому'}
+            additional_stopwords = {'всё', 'это', 'ещё', 'поэтому', 'музыкальный', 'заставка'}
             russian_stopwords.update(additional_stopwords)
 
             # Сохраняем в файл
@@ -64,7 +64,7 @@ class KeywordsExtractor:
 
         return filtered_words
 
-    def get_most_popular_words(self, text: str, top_n: int = 25) -> str:
+    def get_most_popular_words(self, text: str, top_n: int = 100) -> str:
         """
         Подсчет и получение наиболее популярных слов в тексте.
 

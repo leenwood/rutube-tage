@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload MP4 File</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8;
+            text-align: center;
+            padding: 50px;
+            color: #333;
+        }
+        h1 {
+            color: #444;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        p {
+            color: #666;
+            font-size: 1.2em;
+        }
+        form {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            display: inline-block;
+            max-width: 500px;
+            width: 100%;
+            text-align: left;
+        }
+        input[type="file"], input[type="text"], textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 1em;
+            box-sizing: border-box;
+        }
+        textarea {
+            resize: vertical;
+            height: 100px;
+        }
+        input[type="submit"] {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 1em;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+            transition: background-color 0.3s ease;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Upload MP4 File</h1>
+    <p>Fill in the details and select an MP4 file to upload:</p>
+    <form id="uploadForm" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" placeholder="Enter title" required>
+        </div>
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" placeholder="Enter a description" required></textarea>
+        </div>
+        <div class="form-group">
+            <label for="file">Select MP4 file:</label>
+            <input type="file" id="file" name="file" accept=".mp4" required>
+        </div>
+        <input type="submit" value="Upload MP4">
+    </form>
+
+    <script>
+        const form = document.getElementById('uploadForm');
+
+        form.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            const formData = new FormData(form);
+            const fileInput = form.querySelector('input[type="file"]');
+            const fileName = fileInput.files[0].name;
+            var urlId = fileInput.files[0].name;
+            urlId = urlId.replace(/\.(mp3|mp4|txt)$/i, '');
+            urlId = urlId.trim();
+
+            const host = window.location.hostname;
+            const port = window.location.port || 8001; // Default to port 8001 if not specified
+            const uploadUrl = `http://${host}:${port}`;
+
+            fetch(uploadUrl + '/upload', {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => {
+                if (response.ok) {
+                    // If file successfully uploaded, redirect to the view page
+                    window.location.href = `${uploadUrl}/view/${encodeURIComponent(urlId)}`;
+                } else {
+                    alert('Error uploading file');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while uploading');
+            });
+        });
+    </script>
+</body>
+</html>

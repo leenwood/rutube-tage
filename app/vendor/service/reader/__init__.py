@@ -1,2 +1,0 @@
-
-from .FileReader import FileReader

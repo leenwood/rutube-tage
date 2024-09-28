@@ -8,7 +8,8 @@ import whisper
 class TranscriptionSpeech:
 
     def __init__(self):
-        self.model = whisper.load_model("tiny")
+        self.model = whisper.load_model("base")
+        self.model.to("cuda")
 
     def stt(self, filename: str):
         filename = normalize_name(filename)
