@@ -10,7 +10,7 @@ from vendor.service.predictor2001 import Predictor
 from vendor.service.videodecoder import DataProcessor
 from vendor.service.webserver import WebServerHandler
 
-PORT = 8000
+PORT = 8008
 UPLOAD_DIR = "input"  # Директория для сохранения файлов
 
 # Проверяем, существует ли директория, и создаем её, если нет

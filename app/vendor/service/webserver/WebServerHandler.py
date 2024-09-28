@@ -149,6 +149,7 @@ class WebServerHandler(http.server.SimpleHTTPRequestHandler):
 
                 # Отправляем сгенерированный HTML
                 self.wfile.write(html_content.encode())
+                return
             else:
                 # Если videos.json не существует, возвращаем сообщение
                 self.send_response(404)
