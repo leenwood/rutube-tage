@@ -8,9 +8,6 @@ class Predictor:
         self._search_instance = FaissSearchSingleton()
 
 
-
-
-
     def predict(self, title: str = "", description: str = "", popular_words: str = "") -> list:
         # Получение вектора
         vector = self._search_instance.get_vectors([f"{title.lower()} {description.lower()} {popular_words}"])
