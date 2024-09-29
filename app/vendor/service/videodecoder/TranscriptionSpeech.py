@@ -6,10 +6,13 @@ from .normalizator import normalize_name
 import whisper
 
 class TranscriptionSpeech:
-
+    
     def __init__(self):
         self.model = whisper.load_model("base")
-        self.model.to("cuda")
+        if torch.cuda.is_available():
+            self.model.to("cuda")  # Переносим модель на GPU
+        else:
+            print("CUDA не доступна, модель будет работать на CPU")
 
     def stt(self, filename: str):
         filename = normalize_name(filename)
